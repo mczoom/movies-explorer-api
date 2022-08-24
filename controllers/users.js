@@ -12,9 +12,7 @@ module.exports.createUser = (req, res, next) => {
   const { email, password, name } = req.body;
   bcrypt.hash(password, 10)
     .then((hash) => User.create({ email, name, password: hash }))
-    .then((user) => res.status(201).send({
-      data: { name: user.name, email: user.email },
-    }))
+    .then((user) => res.status(201).send(user))
     .catch((err) => {
       if (err.code === 11000) {
         next(new RegistrationError('Пользователь с таким email уже зарегистрированн'));
@@ -31,7 +29,7 @@ module.exports.login = (req, res, next) => {
   return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'super-secret-key', { expiresIn: '7d' });
-      res.cookie('jwt', token, {
+      res.cookie('token', token, {
         maxAge: 3600000 * 24 * 7,
         httpOnly: true,
       }).send({ token });
