@@ -39,7 +39,7 @@ module.exports.login = (req, res, next) => {
 
 module.exports.getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
-    .then((user) => res.send(user))
+    .then((user) => res.send({ email: user.email, name: user.name }))
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new BadRequestError('Переданы некорректные данные'));
@@ -55,7 +55,7 @@ module.exports.updateUserInfo = (req, res, next) => {
 
   User.findByIdAndUpdate(userId, { name, email }, { new: true, runValidators: true })
     .orFail(new NotFoundError('Пользователь не найден'))
-    .then((user) => res.send(user))
+    .then((user) => res.send({ email: user.email, name: user.name }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некорректные данные'));
