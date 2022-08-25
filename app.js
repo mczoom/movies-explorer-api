@@ -56,6 +56,7 @@ app.post('/signup', userValidation, createUser);
 
 app.use('/', auth, usersRouter);
 app.use('/', auth, moviesRouter);
+
 // app.use('/*', () => {
 //   throw new NotFoundError('Страница не найдена');
 // });
