@@ -27,7 +27,7 @@ const moviesSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator(url) {
-        return isURL(url, { required_protocol: true });
+        return isURL(url);
       },
       message: 'Введите ссылку',
     },
@@ -37,7 +37,7 @@ const moviesSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator(url) {
-        return isURL(url, { required_protocol: true });
+        return isURL(url);
       },
       message: 'Введите ссылку',
     },
@@ -47,7 +47,7 @@ const moviesSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator(url) {
-        return isURL(url, { required_protocol: true });
+        return isURL(url);
       },
       message: 'Введите ссылку',
     },
@@ -58,7 +58,7 @@ const moviesSchema = new mongoose.Schema({
     required: true,
   },
   movieId: {
-    type: String,
+    type: Number,
     required: true,
   },
   nameRU: {

@@ -33,17 +33,17 @@ module.exports.movieValidation = celebrate({
     year: Joi.string().required(),
     description: Joi.string().required(),
     image: Joi.string().required().pattern(linkRegExp),
-    trailer: Joi.string().required().pattern(linkRegExp),
+    trailerLink: Joi.string().required().pattern(linkRegExp),
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),
     thumbnail: Joi.string().required().pattern(linkRegExp),
-    movieId: Joi.string().required(),
+    movieId: Joi.number().integer().required(),
   }),
 });
 
 module.exports.movieIdValidation = celebrate({
   params: Joi.object().keys({
-    cardId: Joi.string().hex().length(24).required(),
+    movieId: Joi.string().hex().length(24).required(),
   }),
 });
 

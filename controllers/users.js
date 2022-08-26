@@ -12,7 +12,7 @@ module.exports.createUser = (req, res, next) => {
   const { email, password, name } = req.body;
   bcrypt.hash(password, 10)
     .then((hash) => User.create({ email, name, password: hash }))
-    .then((user) => res.status(201).send(user))
+    .then((user) => res.status(201).send({ email: user.email, name: user.name }))
     .catch((err) => {
       if (err.code === 11000) {
         next(new RegistrationError('Пользователь с таким email уже зарегистрированн'));
