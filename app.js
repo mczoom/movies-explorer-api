@@ -41,7 +41,7 @@ app.use((req, res, next) => {
   next();
 });
 
-mongoose.connect('mongodb://localhost:27017/moviesdb', {
+mongoose.connect('mongodb://localhost:27017/moviesdb2', {
   useNewUrlParser: true,
 });
 
