@@ -49,13 +49,13 @@ module.exports.createMovie = (req, res, next) => {
 };
 
 module.exports.deleteMovie = (req, res, next) => {
-  const { movieId } = req.params;
+  const { _id } = req.params;
   const ownerId = req.user._id;
-  Movie.findById(movieId)
+  Movie.findById(_id)
     .orFail(new NotFoundError('Фильм не найден'))
     .then((movie) => {
       if (movie.owner.toString() === ownerId) {
-        return Movie.findByIdAndRemove(movieId).then((movieData) => res.send(movieData));
+        return Movie.findByIdAndRemove(_id).then((movieData) => res.send(movieData));
       }
     })
     .catch((err) => {
