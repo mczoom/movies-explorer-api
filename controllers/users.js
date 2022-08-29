@@ -58,9 +58,7 @@ module.exports.updateUserInfo = (req, res, next) => {
     .orFail(new NotFoundError('Пользователь не найден'))
     .then((user) => res.send({ email: user.email, name: user.name }))
     .catch((err) => {
-      if (err.code === 11000) {
-        next(new RegistrationError('Пользователь с таким email уже зарегистрированн'));
-      } else if (err.name === 'ValidationError') {
+      if (err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некорректные данные'));
       } else {
         next(err);
