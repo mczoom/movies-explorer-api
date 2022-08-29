@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const { errors } = require('celebrate');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const helmet = require('helmet');
+const { limiter } = require('./middlewares/rateLimiter');
 const usersRouter = require('./routes/users');
 const moviesRouter = require('./routes/movies');
 const { login, createUser } = require('./controllers/users');
@@ -12,6 +14,7 @@ const { errorHandler } = require('./middlewares/errorHandler');
 const { auth } = require('./middlewares/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const NotFoundError = require('./errors/NotFoundError');
+const { CURRENT_BD_ADRESS } = require('./utils/config');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -41,7 +44,7 @@ app.use((req, res, next) => {
   next();
 });
 
-mongoose.connect('mongodb://localhost:27017/moviesdb', {
+mongoose.connect(CURRENT_BD_ADRESS, {
   useNewUrlParser: true,
 });
 
@@ -49,7 +52,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+app.use(limiter);
 app.use(requestLogger);
+app.use(helmet());
 
 app.post('/signin', loginValidation, login);
 app.post('/signup', userValidation, createUser);

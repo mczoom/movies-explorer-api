@@ -1,7 +1,12 @@
-/* eslint-disable no-useless-escape */
 const { celebrate, Joi } = require('celebrate');
+const validator = require('validator');
 
-const linkRegExp = /(http:\/\/|https:\/\/)(www.)*[a-z0-9\-\.\_\~\:\/\?\#\[\]\@\!\$\&\'\(\)\*\+\,\;\=]+#*/;
+const validateURL = (value) => {
+  if (!validator.isURL(value, { require_protocol: true })) {
+    throw new Error('Введите ссылку');
+  }
+  return value;
+};
 
 module.exports.loginValidation = celebrate({
   body: Joi.object().keys({
@@ -32,11 +37,11 @@ module.exports.movieValidation = celebrate({
     duration: Joi.number().required(),
     year: Joi.string().required(),
     description: Joi.string().required(),
-    image: Joi.string().required().pattern(linkRegExp),
-    trailerLink: Joi.string().required().pattern(linkRegExp),
+    image: Joi.string().required().custom(validateURL),
+    trailerLink: Joi.string().required().custom(validateURL),
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),
-    thumbnail: Joi.string().required().pattern(linkRegExp),
+    thumbnail: Joi.string().required().custom(validateURL),
     movieId: Joi.number().integer().required(),
   }),
 });
@@ -46,35 +51,3 @@ module.exports.movieIdValidation = celebrate({
     _id: Joi.string().hex().length(24).required(),
   }),
 });
-
-// module.exports.cardValidation = celebrate({
-//   body: Joi.object().keys({
-//     name: Joi.string().required().min(2).max(30),
-//     link: Joi.string().required().pattern(linkRegExp),
-//   }),
-// });
-
-// module.exports.userInfoValidation = celebrate({
-//   body: Joi.object().keys({
-//     name: Joi.string().required().min(2).max(30),
-//     about: Joi.string().required().min(2).max(20),
-//   }),
-// });
-
-// module.exports.avatarValidation = celebrate({
-//   body: Joi.object().keys({
-//     avatar: Joi.string().required().pattern(linkRegExp),
-//   }),
-// });
-
-// module.exports.userIdValidation = celebrate({
-//   params: Joi.object().keys({
-//     userId: Joi.string().hex().length(24).required(),
-//   }),
-// });
-
-// module.exports.cardIdValidation = celebrate({
-//   params: Joi.object().keys({
-//     cardId: Joi.string().hex().length(24).required(),
-//   }),
-// });

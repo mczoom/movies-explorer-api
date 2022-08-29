@@ -1,8 +1,7 @@
-/* eslint-disable consistent-return */
 const Movie = require('../models/movie');
 const NotFoundError = require('../errors/NotFoundError');
 const BadRequestError = require('../errors/BadRequestError');
-// const ForbiddenError = require('../errors/ForbiddenError');
+const ForbiddenError = require('../errors/ForbiddenError');
 
 module.exports.getMovies = (req, res, next) => {
   Movie.find({})
@@ -52,16 +51,13 @@ module.exports.deleteMovie = (req, res, next) => {
   const { _id } = req.params;
   const ownerId = req.user._id;
   Movie.findById(_id)
-    .orFail(new NotFoundError('Фильм не найден'))
+    .orFail(() => new NotFoundError('Фильм не найден'))
     .then((movie) => {
-      if (movie.owner.toString() === ownerId) {
-        return Movie.findByIdAndRemove(_id).then((movieData) => res.send(movieData));
+      if (!movie.owner.equals(ownerId)) {
+        return next(new ForbiddenError('Удаление чужой карточки невозможно'));
       }
+      return movie.remove()
+        .then(() => res.send({ message: 'Карточка удалена' }));
     })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        next(new BadRequestError('Переданы некорректные данные'));
-      }
-      return next(err);
-    });
+    .catch(next);
 };
