@@ -5,12 +5,11 @@ const { errors } = require('celebrate');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
-const limiter = require('./middlewares/rateLimiter');
 const router = require('./routes/index');
 const { errorHandler } = require('./middlewares/errorHandler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-const { PORT, BD_ADRESS } = require('./utils/config');
 
+const { PORT = 3000 } = process.env;
 const app = express();
 
 const allowedCors = [
@@ -38,7 +37,7 @@ app.use((req, res, next) => {
   next();
 });
 
-mongoose.connect(BD_ADRESS, {
+mongoose.connect('mongodb://localhost:27017/moviesdb', {
   useNewUrlParser: true,
 });
 
@@ -50,8 +49,8 @@ app.use(helmet);
 app.use(requestLogger);
 app.use(router);
 app.use(errors());
+
 app.use(errorLogger);
-app.use(limiter);
 
 app.use(errorHandler);
 
