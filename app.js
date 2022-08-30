@@ -7,14 +7,8 @@ const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const { limiter } = require('./middlewares/rateLimiter');
 const router = require('./routes/index');
-// const usersRouter = require('./routes/users');
-// const moviesRouter = require('./routes/movies');
-// const { login, createUser } = require('./controllers/users');
-// const { loginValidation, userValidation } = require('./middlewares/validation');
 const { errorHandler } = require('./middlewares/errorHandler');
-// const { auth } = require('./middlewares/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-// const NotFoundError = require('./errors/NotFoundError');
 const { CURRENT_BD_ADRESS } = require('./utils/config');
 
 const { PORT = 3000 } = process.env;
@@ -56,15 +50,6 @@ app.use(cookieParser());
 app.use(limiter);
 app.use(requestLogger);
 app.use(helmet());
-
-// app.post('/signin', loginValidation, login);
-// app.post('/signup', userValidation, createUser);
-
-// app.use('/', auth, usersRouter);
-// app.use('/', auth, moviesRouter);
-// app.use('/*', () => {
-//   throw new NotFoundError('Страница не найдена');
-// });
 
 app.use(router);
 
