@@ -47,16 +47,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.use(limiter);
 app.use(requestLogger);
+app.use(limiter);
 app.use(helmet());
-
 app.use(router);
 
 app.use(errors());
-
 app.use(errorLogger);
-
 app.use(errorHandler);
 
 app.listen(PORT, () => {
