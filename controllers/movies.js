@@ -56,9 +56,13 @@ module.exports.deleteMovie = (req, res, next) => {
     .then((movie) => {
       if (!movie.owner.equals(ownerId)) {
         return next(new ForbiddenError('Удаление чужой карточки невозможно'));
+      } else {
+        Movie.findByIdAndDelete(_id)
+          .then((deletedMovie) => {
+            res.send(deletedMovie);
+          })
+          .catch(next);
       }
-      return movie.remove()
-        .then(() => res.send({ message: 'Карточка удалена' }));
     })
     .catch(next);
 };
